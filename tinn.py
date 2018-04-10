@@ -74,11 +74,10 @@ def bprop(t: Tinn, in_: List[float], tg: float, rate: float) -> None:
 		s = 0
 		# Calculate total error change with respect to output.
 		for j in range(t.nops):
-			a = pderr(t.o[j], tg[j])
-			b = pdact(t.o[j])
-			s += a * b * t.x2[j][i]
+			ab = pderr(t.o[j], tg[j]) * pdact(t.o[j])
+			s += ab * t.x2[j][i]
 			# Correct weights in hidden to output layer.
-			t.x2[j][i] -= rate * a * b * t.h[i]
+			t.x2[j][i] -= rate * ab * t.h[i]
 		# Correct weights in input to hidden layer.
 		for j in range(t.nips):
 			t.x1[i][j] -= rate * s * pdact(t.h[i]) * in_[j]
@@ -88,13 +87,13 @@ def fprop(t: Tinn, in_: float) -> None:
 	"""Forward propagation."""
 	# Calculate hidden layer neuron values.
 	for i in range(t.nhid):
-		s = 0
+		s = t.b[0]  # start with bias
 		for j in range(t.nips):
 			s += in_[j] * t.x1[i][j]
-		t.h[i] = act(s + t.b[0])
+		t.h[i] = act(s)
 	# Calculate output layer neuron values.
 	for i in range(t.nops):
-		s = 0
+		s = t.b[1]  # start with bias
 		for j in range(t.nhid):
 			s += t.h[j] * t.x2[i][j]
-		t.o[i] = act(s + t.b[1])
+		t.o[i] = act(s)
