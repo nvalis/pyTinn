@@ -46,7 +46,7 @@ def main():
 		print(f'error {error/len(data)} :: learning rate {rate}')
 		rate *= anneal
 
-	tinn.xtsave(t, 'saved.tinn')
+	t.save('saved.tinn')
 	loaded = tinn.xtload('saved.tinn')
 	in_ = data.in_[0]
 	tg = data.tg[0]

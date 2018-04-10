@@ -19,6 +19,15 @@ class Tinn:
 		self.x2 = [[random.random() - 0.5 for _ in range(nhid)] for _ in range(nops)]  # hidden to output layer weights
 		self.o = [0] * nops  # output layer
 
+	def save(self, path):
+		"""Saves the t to disk."""
+		pickle.dump(self, open(path, 'wb'))
+
+
+def xtload(path: str) -> Tinn:
+	"""Loads a new t from disk."""
+	return pickle.load(open(path, 'rb'))
+
 
 def xttrain(t: Tinn, in_: float, tg: float, rate: float) -> float:
 	"""Trains a t with an input and target output with a learning rate. Returns error rate of the neural network."""
@@ -31,16 +40,6 @@ def xtpredict(t: Tinn, in_: float) -> float:
 	"""Returns an output prediction given an input."""
 	fprop(t, in_)
 	return t.o
-
-
-def xtsave(t: Tinn, path: str) -> None:
-	"""Saves the t to disk."""
-	pickle.dump(t, open(path, 'wb'))
-
-
-def xtload(path: str) -> Tinn:
-	"""Loads a new t from disk."""
-	return pickle.load(open(path, 'rb'))
 
 
 def err(a: float, b: float) -> float:
